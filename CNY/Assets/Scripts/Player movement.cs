@@ -51,7 +51,6 @@ public class Playermovement : MonoBehaviour
             transform.position += Vector3.right * -moveSpeed * Time.deltaTime;
 
         }
-
         else if (Input.GetKey(KeyCode.W))
         {
             transform.position += Vector3.up * moveSpeed * Time.deltaTime;
@@ -62,8 +61,6 @@ public class Playermovement : MonoBehaviour
             transform.position += Vector3.up * -moveSpeed * Time.deltaTime;
 
         }
-
-   
         
     }
 
