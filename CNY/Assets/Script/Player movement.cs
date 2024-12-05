@@ -1,16 +1,87 @@
+using Unity.VisualScripting;
 using UnityEngine;
+
+
 
 public class Playermovement : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+   [SerializeField] public float moveSpeed = 5f;
+   [SerializeField] public float jumoForce = 10f;
+    public CharacterController controll; 
+
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundlayer;
+
+    private Rigidbody2D rb;
+    private bool isGrounded;
+    public Animator animator; 
+
+
+ 
+   
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    
+
+    void Update()
+    {
+       
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        Vector3 tempVect = new Vector3(h, v, 0);
+        tempVect = tempVect.normalized * moveSpeed * Time.deltaTime;
+
+        //player move along with rigidbody 
+        rb.MovePosition(rb.transform.position + tempVect);
+
+        
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            transform.position += Vector3.right * -moveSpeed * Time.deltaTime;
+
+        }
+
+        else if (Input.GetKey(KeyCode.W))
+        {
+            transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            transform.position += Vector3.up * -moveSpeed * Time.deltaTime;
+
+        }
+
+   
         
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        // Check if the player is on the ground
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        // Check if the player is no longer on the ground
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 }
