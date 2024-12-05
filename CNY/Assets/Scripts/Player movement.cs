@@ -5,31 +5,32 @@ using UnityEngine;
 
 public class Playermovement : MonoBehaviour
 {
-   [SerializeField] public float moveSpeed = 5f;
-   [SerializeField] public float jumoForce = 10f;
-    public CharacterController controll; 
+    [SerializeField] public float moveSpeed = 5f;
+    [SerializeField] public float jumoForce = 10f;
+    public CharacterController controll;
 
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
     public LayerMask groundlayer;
 
     private Rigidbody2D rb;
-    private bool isGrounded;
-    public Animator animator; 
+    private bool isGrounded = false;    
+    public Animator animator;
 
 
- 
-   
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    
+
 
     void Update()
     {
-       
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundlayer);
+
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
@@ -39,7 +40,7 @@ public class Playermovement : MonoBehaviour
         //player move along with rigidbody 
         rb.MovePosition(rb.transform.position + tempVect);
 
-        
+
 
         if (Input.GetKey(KeyCode.D))
         {
@@ -51,6 +52,7 @@ public class Playermovement : MonoBehaviour
             transform.position += Vector3.right * -moveSpeed * Time.deltaTime;
 
         }
+
         else if (Input.GetKey(KeyCode.W))
         {
             transform.position += Vector3.up * moveSpeed * Time.deltaTime;
@@ -61,7 +63,9 @@ public class Playermovement : MonoBehaviour
             transform.position += Vector3.up * -moveSpeed * Time.deltaTime;
 
         }
-        
+
+
+
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -81,4 +85,5 @@ public class Playermovement : MonoBehaviour
             isGrounded = false;
         }
     }
+
 }
