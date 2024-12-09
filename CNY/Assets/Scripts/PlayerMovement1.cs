@@ -11,7 +11,7 @@ public class PlayerMovement1 : MonoBehaviour
 
     private Rigidbody2D rb;                     
     private bool isGrounded = false;              
-    public Animator animator;                      
+                         
 
     private void Start()
     {
@@ -29,17 +29,11 @@ public class PlayerMovement1 : MonoBehaviour
         // Move player horizontally
         rb.linearVelocity = new Vector2(h * moveSpeed, rb.linearVelocity.y);
 
-        // Jumping
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            Debug.Log("Jumping");
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); 
         }
 
-        // Set animations (if applicable)
-        if (animator != null)
-        {
-            animator.SetFloat("Speed", Mathf.Abs(h));
-            animator.SetBool("IsGrounded", isGrounded);
-        }
     }
 }
