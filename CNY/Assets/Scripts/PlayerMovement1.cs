@@ -20,19 +20,15 @@ public class PlayerMovement1 : MonoBehaviour
 
     private void Update()
     {
-        // Check if the player is grounded
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Movement input
         float h = Input.GetAxis("Horizontal");
 
-        // Move player horizontally
         rb.linearVelocity = new Vector2(h * moveSpeed, rb.linearVelocity.y);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            Debug.Log("Jumping");
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); 
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); 
         }
 
     }
