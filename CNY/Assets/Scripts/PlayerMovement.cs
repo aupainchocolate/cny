@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;                     
     private bool isGrounded = false;              
-    public Animator animator;                      
+                         
 
     private void Start()
     {
@@ -20,26 +20,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // Check if the player is grounded
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Movement input
         float h = Input.GetAxis("Horizontal");
 
-        // Move player horizontally
         rb.linearVelocity = new Vector2(h * moveSpeed, rb.linearVelocity.y);
 
-        // Jumping
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); 
         }
 
-        // Set animations (if applicable)
-        if (animator != null)
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
         {
-            animator.SetFloat("Speed", Mathf.Abs(h));
-            animator.SetBool("IsGrounded", isGrounded);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
+    
     }
 }
