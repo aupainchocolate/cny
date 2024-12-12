@@ -36,4 +36,13 @@ public class PlayerMovement1 : MonoBehaviour
         }
 
     }
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    
+    }
 }
