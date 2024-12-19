@@ -303,7 +303,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  animator: {fileID: 0}
 --- !u!114 &142268395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,7 +580,7 @@ GameObject:
   - component: {fileID: 1071269700}
   - component: {fileID: 1071269699}
   - component: {fileID: 1071269701}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
