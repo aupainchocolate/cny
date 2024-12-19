@@ -10,9 +10,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;               
 
     private Rigidbody2D rb;                     
-    private bool isGrounded = false;              
+    private bool isGrounded = false;
                          
-
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();          
@@ -22,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        float h = Input.GetAxis("Horizontal");
+        float h = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
         rb.linearVelocity = new Vector2(h * moveSpeed, rb.linearVelocity.y);
 
@@ -32,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
+
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
@@ -39,6 +39,10 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
-    
+    }
+
+    private void Flip()
+    {
+        transform.Rotate(0f, 180f, 0f);
     }
 }
