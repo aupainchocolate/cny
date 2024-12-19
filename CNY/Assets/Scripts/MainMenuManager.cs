@@ -1,29 +1,45 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
-    public SliderJoint2D volumSlider;
+    [SerializeField] private Slider volumeSlider;
 
-    public AudioSource bgmSource; 
-    public void Start()
+    private void Start()
     {
-        bgmSource.Play();
+        // Initialize the volume slider value
+        if (MusicManager.instance != null)
+        {
+            volumeSlider.value = MusicManager.instance.GetComponent<AudioSource>().volume;
+        }
 
-        if (volumSlider != null)
-        { 
-           
+        // Add a listener to handle volume changes
+        if (volumeSlider != null)
+        {
+            volumeSlider.onValueChanged.AddListener(SetVolume);
         }
     }
-
     public void StartGame()
     {
-        bgmSource.Stop(); 
-
-        
+        if (MusicManager.instance != null)
+        {
+            MusicManager.instance.PlayGameMusic(); // Switch to game music
+        }
+        SceneManager.LoadScene("GameScene"); // Replace with the actual name of your game scene
     }
-    void Update()
+
+    public void QuitGame()
     {
-        
+        Application.Quit();
+        Debug.Log("Game Quit"); // Debug message for testing in the editor
+    }
+
+    private void SetVolume(float volume)
+    {
+        if (MusicManager.instance != null)
+        {
+            MusicManager.instance.SetVolume(volume);
+        }
     }
 }
