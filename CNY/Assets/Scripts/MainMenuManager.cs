@@ -24,7 +24,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (MusicManager.instance != null)
         {
-            MusicManager.instance.PlayGameMusic(); // Switch to game music
+            MusicManager.instance.PlayGameMusic(); 
         }
         SceneManager.LoadScene("GameScene"); // Replace with the actual name of your game scene
     }
