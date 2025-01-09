@@ -3,11 +3,30 @@ using UnityEngine;
 public class Shot : MonoBehaviour
 {
     public float speed = 10f;
-    public Rigidbody2D rb;
+    private Vector2 direction = Vector2.right; // Standardriktning
 
-    void Start()
+    private Rigidbody2D rb;
+
+    private void Start()
     {
-        rb.linearVelocity = transform.right * speed;
+        rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = direction * speed;
+        }
+        else
+        {
+            Debug.LogError("Rigidbody2D component missing on Shot!");
+        }
+    }
+
+    public void SetDirection(Vector2 newDirection)
+    {
+        direction = newDirection.normalized;
+        if (rb != null)
+        {
+            rb.linearVelocity = direction * speed;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D hitInfo)
