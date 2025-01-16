@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Shot : MonoBehaviour
+public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
     private Vector2 direction = Vector2.right; // Standardriktning
