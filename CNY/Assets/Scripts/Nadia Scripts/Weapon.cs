@@ -3,7 +3,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     public Transform firePoint;
-    public GameObject shotPrefab;
+    public GameObject bulletPrefab;
 
     private bool isFacingRight = true; // Standardriktning är åt höger
 
@@ -15,10 +15,6 @@ public class Weapon : MonoBehaviour
         {
             // Lyssna på spelarens flip-händelse
             player.OnPlayerFlip += UpdateDirection;
-        }
-        else
-        {
-            Debug.LogError("PlayerMovement script not found in the scene!");
         }
     }
 
@@ -37,24 +33,20 @@ public class Weapon : MonoBehaviour
 
     private void Shoot()
     {
-        if (firePoint == null || shotPrefab == null)
+        if (firePoint == null || bulletPrefab == null)
         {
             Debug.LogError("FirePoint or ShotPrefab is not assigned!");
             return;
         }
 
         // Instansiera skottet
-        GameObject shot = Instantiate(shotPrefab, firePoint.position, firePoint.rotation);
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
         // Sätt riktningen på skottet
-        Shot shotScript = shot.GetComponent<Shot>();
-        if (shotScript != null)
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+        if (bulletScript != null)
         {
-            shotScript.SetDirection(isFacingRight ? Vector2.right : Vector2.left);
-        }
-        else
-        {
-            Debug.LogError("Shot prefab does not have a Shot script attached!");
+            bulletScript.SetDirection(isFacingRight ? Vector2.right : Vector2.left);
         }
     }
 }
