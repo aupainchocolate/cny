@@ -3,6 +3,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
+    public int damage;
     private Vector2 direction = Vector2.right; // Standardriktning
 
     private Rigidbody2D rb;
@@ -13,10 +14,6 @@ public class Bullet : MonoBehaviour
         if (rb != null)
         {
             rb.linearVelocity = direction * speed;
-        }
-        else
-        {
-            Debug.LogError("Rigidbody2D component missing on Shot!");
         }
     }
 
@@ -33,7 +30,13 @@ public class Bullet : MonoBehaviour
     {
         if (hitInfo.CompareTag("Enemy"))
         {
-            Destroy(gameObject);
+            EnemyHealth enemy = hitInfo.GetComponent<EnemyHealth>();
+            if ( enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
         }
+
+        Destroy(gameObject);
     }
 }
