@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
             (horizontalInput == 0 ? deceleration : acceleration) * Time.fixedDeltaTime);
         rb.linearVelocity = new Vector2(currentSpeed, rb.linearVelocity.y);
 
-        // Handle jumping
+        // handlerar hoppande
         if (isJumping)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
