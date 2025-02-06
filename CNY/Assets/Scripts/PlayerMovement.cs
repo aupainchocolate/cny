@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 5f;
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
+    public float gravityScale = 10f;
     public LayerMask groundLayer;
 
     private Rigidbody2D rb;
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = gravityScale;
     }
 
     private void Update()
