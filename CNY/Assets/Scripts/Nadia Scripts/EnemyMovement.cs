@@ -6,25 +6,53 @@ public class EnemyMovement : MonoBehaviour
     public float moveSpeed;
     public int patrolDestination;
 
+    public Transform playerTransform;
+    public bool isChasing;
+    public float chaseDistance;
+
+    private Rigidbody2D rb;
+
     void Update()
     {
-        if (patrolDestination == 0)
+        if (isChasing)
         {
-            transform.position = Vector2.MoveTowards(transform.position, patrolPoints[0].position, moveSpeed * Time.deltaTime);
-            if (Vector2.Distance(transform.position, patrolPoints[0].position) < .2f)
+            if (transform.position.x > playerTransform.position.x)
             {
                 transform.localScale = new Vector3(1, 1, 1);
-                patrolDestination = 1;
+                transform.position += Vector3.left * moveSpeed * Time.deltaTime;
+            }
+            if (transform.position.x < playerTransform.position.x)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+                transform.position += Vector3.right * moveSpeed * Time.deltaTime;
             }
         }
 
-        if (patrolDestination == 1)
+        else
         {
-            transform.position = Vector2.MoveTowards(transform.position, patrolPoints[1].position, moveSpeed * Time.deltaTime);
-            if (Vector2.Distance(transform.position, patrolPoints[1].position) < .2f)
+            if (Vector2.Distance(transform.position, playerTransform.position) < chaseDistance)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
-                patrolDestination = 0;
+                isChasing = true;
+            }
+
+            if (patrolDestination == 0)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, patrolPoints[0].position, moveSpeed * Time.deltaTime);
+                if (Vector2.Distance(transform.position, patrolPoints[0].position) < 1f)
+                {
+                    transform.localScale = new Vector3(1, 1, 1);
+                    patrolDestination = 1;
+                }
+            }
+
+            if (patrolDestination == 1)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, patrolPoints[1].position, moveSpeed * Time.deltaTime);
+                if (Vector2.Distance(transform.position, patrolPoints[1].position) < .2f)
+                {
+                    transform.localScale = new Vector3(-1, 1, 1);
+                    patrolDestination = 0;
+                }
             }
         }
     }
