@@ -4,30 +4,35 @@ public class EnemyMovement : MonoBehaviour
 {
     public Transform[] patrolPoints;
     public float moveSpeed;
-    public int patrolDestination;
+    public int patrolDestination = 0;
 
     public Transform playerTransform;
     public bool isChasing;
     public float chaseDistance;
 
-    private Rigidbody2D rb;
+    private Animator animator;
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     void Update()
     {
         if (isChasing)
         {
+            animator.SetBool("IsWalking", true); // Play walking animation
             if (transform.position.x > playerTransform.position.x)
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = new Vector3(-1, 1, 1);
                 transform.position += Vector3.left * moveSpeed * Time.deltaTime;
             }
             if (transform.position.x < playerTransform.position.x)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                transform.localScale = new Vector3(1, 1, 1);
                 transform.position += Vector3.right * moveSpeed * Time.deltaTime;
             }
         }
-
         else
         {
             if (Vector2.Distance(transform.position, playerTransform.position) < chaseDistance)
@@ -35,10 +40,12 @@ public class EnemyMovement : MonoBehaviour
                 isChasing = true;
             }
 
+            animator.SetBool("IsWalking", true); // Play walking animation
+
             if (patrolDestination == 0)
             {
                 transform.position = Vector2.MoveTowards(transform.position, patrolPoints[0].position, moveSpeed * Time.deltaTime);
-                if (Vector2.Distance(transform.position, patrolPoints[0].position) < 1f)
+                if (Vector2.Distance(transform.position, patrolPoints[0].position) < 0.2f)
                 {
                     transform.localScale = new Vector3(1, 1, 1);
                     patrolDestination = 1;
@@ -48,7 +55,7 @@ public class EnemyMovement : MonoBehaviour
             if (patrolDestination == 1)
             {
                 transform.position = Vector2.MoveTowards(transform.position, patrolPoints[1].position, moveSpeed * Time.deltaTime);
-                if (Vector2.Distance(transform.position, patrolPoints[1].position) < .2f)
+                if (Vector2.Distance(transform.position, patrolPoints[1].position) < 0.2f)
                 {
                     transform.localScale = new Vector3(-1, 1, 1);
                     patrolDestination = 0;

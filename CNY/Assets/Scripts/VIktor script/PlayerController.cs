@@ -1,8 +1,7 @@
 using UnityEngine;
-using System.Collections;
+
 public class PlayerController : MonoBehaviour
 {
-   
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float acceleration = 10f;
@@ -21,6 +20,12 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     private bool isGrounded;
 
+    [Header("KnockBack")]
+    public float KBForce; // Knockback force
+    public float KBCounter; // Knockback duration counter
+    public float KBTotalTime; // Total knockback duration
+    public bool KnockFromRight; // Direction of knockback
+
     private Rigidbody2D rb;
     private float horizontalInput;
 
@@ -31,33 +36,50 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
-        if (isGrounded)
+        // Only allow input if not in knockback
+        if (KBCounter <= 0)
         {
-            coyoteTimeCounter = coyoteTime;
-        }
-        else
-        {
-            coyoteTimeCounter -= Time.deltaTime;
-        }
+            horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0)
-        {
-            isJumping = true;
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+            if (isGrounded)
+            {
+                coyoteTimeCounter = coyoteTime;
+            }
+            else
+            {
+                coyoteTimeCounter -= Time.deltaTime;
+            }
+
+            if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0)
+            {
+                isJumping = true;
+            }
         }
     }
 
     void FixedUpdate()
     {
-        float targetSpeed = horizontalInput * moveSpeed;
-        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed,
-            (horizontalInput == 0 ? deceleration : acceleration) * Time.fixedDeltaTime);
-        rb.linearVelocity = new Vector2(currentSpeed, rb.linearVelocity.y);
+        if (KBCounter <= 0)
+        {
+            // Normal movement
+            float targetSpeed = horizontalInput * moveSpeed;
+            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed,
+                (horizontalInput == 0 ? deceleration : acceleration) * Time.fixedDeltaTime);
+            rb.linearVelocity = new Vector2(currentSpeed, rb.linearVelocity.y);
+        }
+        else
+        {
+            // Reduce knockback counter
+            KBCounter -= Time.deltaTime;
 
-        // handlerar hoppande
+            // Maintain horizontal knockback velocity
+            float knockbackDirection = KnockFromRight ? -1 : 1;
+            rb.linearVelocity = new Vector2(knockbackDirection * KBForce, rb.linearVelocity.y);
+        }
+
+        // Handle jumping
         if (isJumping)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
