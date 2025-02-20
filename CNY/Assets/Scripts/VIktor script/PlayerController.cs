@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -25,6 +26,9 @@ public class PlayerController : MonoBehaviour
     public float KBCounter; // Knockback duration counter
     public float KBTotalTime; // Total knockback duration
     public bool KnockFromRight; // Direction of knockback
+
+    [Header("PLayer FLipping")]
+    public bool isFacingRight = true;
 
     private Rigidbody2D rb;
     private float horizontalInput;
@@ -55,6 +59,14 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0)
             {
                 isJumping = true;
+            }
+
+            float moveInput = Input.GetAxis("Horizontal");
+            transform.Translate(Vector2.right * moveInput * moveSpeed * Time.deltaTime);
+
+            if ((moveInput > 0 && !isFacingRight) || (moveInput < 0 && isFacingRight))
+            {
+                Flip();
             }
         }
     }
@@ -94,5 +106,14 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
+    }
+
+    void FLip()
+    {
+        isFacingRight = !isFacingRight;
+
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 }
