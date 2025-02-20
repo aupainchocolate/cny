@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int health;
+    public int enemyHealth;
 
     public void TakeDamage (int damage)
     {
-        health -= damage;
+        enemyHealth -= damage;
 
-        if (health <= 0)
+        if (enemyHealth <= 0)
         {
             Die();
         }
