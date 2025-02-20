@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Runtime.CompilerServices;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,52 +10,47 @@ public class PlayerMovement : MonoBehaviour
     public float groundCheckRadius = 0.2f;
     public float gravityScale = 10f;
     public LayerMask groundLayer;
+    internal Action<bool> OnPlayerFlip;
 
     private Rigidbody2D rb;
-    private bool isGrounded = false;
-    private bool isFacingRight = true;
+    private Animator anim;
 
-    // Händelse för att meddela riktning
-    public event Action<bool> OnPlayerFlip;
+    private float moveInput;
+    bool isGrounded = false;
 
-    private void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = gravityScale;
+       anim = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        moveInput = Input.GetAxisRaw("Horizontal");
 
-        float h = Input.GetAxisRaw("Horizontal");
-
-        rb.linearVelocity = new Vector2(h * moveSpeed, rb.linearVelocity.y);
-
-        if (h > 0 && !isFacingRight)
-        {
-            Flip();
-        }
-        else if (h < 0 && isFacingRight)
-        {
-            Flip();
-        }
+        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            isGrounded = false;
+            anim.SetBool("isJumping", !isGrounded);
+
         }
-    }
 
-    private void Flip()
+    }
+            
+    private void FixedUpdate()
     {
-        isFacingRight = !isFacingRight;
-
-        // Meddela vapnet om riktningen
-        OnPlayerFlip?.Invoke(isFacingRight);
-
-        Vector3 scaler = transform.localScale;
-        scaler.x *= -1;
-        transform.localScale = scaler;
+         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        anim.SetFloat("xVelocity", Math.Abs(rb.linearVelocity.x));
+        anim.SetFloat("yVelocity", rb.linearVelocity.y);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        isGrounded = true;
+        anim.SetBool("isJumping", !isGrounded);
+    }
+    
 }
