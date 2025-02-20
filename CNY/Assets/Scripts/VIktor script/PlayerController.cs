@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("PLayer FLipping")]
     public bool isFacingRight = true;
+    public Transform specificChild;
+    public Transform gunBone;
 
     private Rigidbody2D rb;
     private float horizontalInput;
@@ -108,12 +110,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FLip()
+    void Flip()
     {
         isFacingRight = !isFacingRight;
 
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+
+        //if (specificChild != null)
+        //{
+        //    Vector3 childScale = specificChild.localScale;
+        //    childScale.x *= -1;
+        //    specificChild.localScale = childScale;
+        //}
+
+        //if (gunBone != null)
+        //{
+        //    Vector3 boneScale = gunBone.localScale;
+        //    boneScale.x *= -1; 
+        //    gunBone.localScale = boneScale;
+        //}
     }
 }
